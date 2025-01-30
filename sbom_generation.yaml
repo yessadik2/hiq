@@ -14,6 +14,7 @@ steps:
     name: "Download the version 10.10.0 of cdxgen globally"
     command: |
       npm install -g @cyclonedx/cdxgen@10.10.0
+      pip install --no-build-isolation git+https://github.com/juncongmoo/itree.git
   - type: Command
     name: "Workaround to let cdxgen run on nodejs 16"
     command: |
