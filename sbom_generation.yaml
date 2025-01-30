@@ -34,8 +34,7 @@ steps:
     name: "Generate SBOM for Python "
     command: |
       cd hiq
-      scl enable devtoolset-10 -- gcc --version 
-      yum -y install gcc 
+      scl enable devtoolset-10 bash
       gcc --version
       pip install --no-build-isolation git+https://github.com/juncongmoo/itree.git 
       cmake --version
