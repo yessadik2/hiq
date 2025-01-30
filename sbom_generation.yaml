@@ -26,6 +26,7 @@ steps:
     name: "Generate SBOM for Python "
     command: |
       cd hiq
+      yum install cmake
       # Search the test or dev requirements files, so that test and dev py packages can be excluded in the generated SBOM
       files=$(find . -type f -regex ".*\(test.*requirements\|requirements.*test\|dev.*requirements\|requirements.*dev\).*\.txt") && \
       if [ -n "$files" ]; then \
