@@ -23,7 +23,10 @@ steps:
       cd /node/node-v16.14.2-linux-x64/lib/node_modules/@cyclonedx/cdxgen
       npm install cheerio@v1.0.0-rc.12
       yum -y install oracle-softwarecollection-release-el7
-      yum install devtoolset-9
+      yum -y install devtoolset-9
+  - type: Command
+    name: "Download the version 10.10.0 of cdxgen globally"
+    command: |
       scl enable devtoolset-9 -- gcc --version
   - type: Command
     name: "Generate SBOM for Python "
