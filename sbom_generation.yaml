@@ -6,7 +6,7 @@ timeoutInSeconds: 1000
 shell: bash
 env:
   variables:
-    PYTHON_CMD: "python3"
+    PYTHON_CMD: "python3.8"
     CDXGEN_DEBUG_MODE: "debug"
 
 steps:
@@ -15,6 +15,8 @@ steps:
     command: |
       npm install -g @cyclonedx/cdxgen@10.10.0
       gcc --version
+
+
   - type: Command
     name: "Workaround to let cdxgen run on nodejs 16"
     command: |
@@ -25,12 +27,13 @@ steps:
       npm install cheerio@v1.0.0-rc.12
       yum -y install oracle-softwarecollection-release-el7
       yum -y install devtoolset-10
+      yum -y install rh-python38
       pip install cmake --upgrade
   - type: Command
     name: "Generate SBOM for Python "
     command: |
-      scl enable devtoolset-10 -- bash
       source /opt/rh/devtoolset-10/enable
+      source /opt/rh/rh-python38/enable
       cd hiq
       cdxgen -t python -o artifactSBOM.json --spec-version 1.4 --project-name "hiq" --no-recurse
       mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
