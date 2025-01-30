@@ -25,7 +25,6 @@ steps:
       yum -y install oracle-softwarecollection-release-el7
       yum install devtoolset-9
       scl enable devtoolset-9 -- gcc --version
-      pip install cmake --upgrade
   - type: Command
     name: "Generate SBOM for Python "
     command: |
