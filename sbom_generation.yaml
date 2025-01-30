@@ -27,28 +27,13 @@ steps:
       yum -y install devtoolset-10
       pip install cmake --upgrade
   - type: Command
-    name: "Download the version 10.10.0 of cdxgen globally"
-    command: |
-      scl enable devtoolset-10 -- gcc --version
-  - type: Command
     name: "Generate SBOM for Python "
     command: |
-      cd hiq
       scl enable devtoolset-10 -- bash
       source /opt/rh/devtoolset-10/enable
-      gcc --version
-      pip install --no-build-isolation git+https://github.com/juncongmoo/itree.git 
-      cmake --version
-      # Search the test or dev requirements files, so that test and dev py packages can be excluded in the generated SBOM
-      files=$(find . -type f -regex ".*\(test.*requirements\|requirements.*test\|dev.*requirements\|requirements.*dev\).*\.txt")
-      if [ -n "$files" ]; then
-        cdxgen -t python -o artifactSBOM.json --spec-version 1.4 \
-        --exclude "*{requirements,dev,test}*{requirements,dev,test}*.txt" --project-name "$(basename $OCI_PRIMARY_SOURCE_URL)" --no-recurse
-      else
-         cdxgen -t python -o artifactSBOM.json --spec-version 1.4 --project-name "$(basename $OCI_PRIMARY_SOURCE_URL)" --no-recurse
-      fi
+      cd hiq
+      cdxgen -t python -o artifactSBOM.json --spec-version 1.4 --project-name "hiq" --no-recurse
       mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
-
 outputArtifacts:
   - name: artifactSBOM
     type: BINARY
