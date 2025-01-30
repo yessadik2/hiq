@@ -22,6 +22,7 @@ steps:
       # This is a workaround to ensure cdxgen functions correctly, even in an older Node.js environment.
       cd /node/node-v16.14.2-linux-x64/lib/node_modules/@cyclonedx/cdxgen
       npm install cheerio@v1.0.0-rc.12
+      yum -y install oracle-softwarecollection-release-el7
       yum install devtoolset-9
       scl enable devtoolset-9 -- gcc --version
       pip install cmake --upgrade
