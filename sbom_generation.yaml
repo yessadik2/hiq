@@ -20,21 +20,22 @@ steps:
       # cdxgen relies on a fourth-party dependency that cannot be executed in a Node.js environment running version 16
       # (as installed on the build runner instance)
       # This is a workaround to ensure cdxgen functions correctly, even in an older Node.js environment.
-      cd /node/node-v16.14.2-linux-x64/lib/node_modules/@cyclonedx/cdxgen && \
+      cd /node/node-v16.14.2-linux-x64/lib/node_modules/@cyclonedx/cdxgen
       npm install cheerio@v1.0.0-rc.12
   - type: Command
     name: "Generate SBOM for Python "
     command: |
       cd hiq
       yum install cmake
+      cmake --version
       # Search the test or dev requirements files, so that test and dev py packages can be excluded in the generated SBOM
-      files=$(find . -type f -regex ".*\(test.*requirements\|requirements.*test\|dev.*requirements\|requirements.*dev\).*\.txt") && \
-      if [ -n "$files" ]; then \
+      files=$(find . -type f -regex ".*\(test.*requirements\|requirements.*test\|dev.*requirements\|requirements.*dev\).*\.txt")
+      if [ -n "$files" ]; then
         cdxgen -t python -o artifactSBOM.json --spec-version 1.4 \
         --exclude "*{requirements,dev,test}*{requirements,dev,test}*.txt" --project-name "$(basename $OCI_PRIMARY_SOURCE_URL)" --no-recurse
-      else \
+      else
          cdxgen -t python -o artifactSBOM.json --spec-version 1.4 --project-name "$(basename $OCI_PRIMARY_SOURCE_URL)" --no-recurse
-      fi && \
+      fi
       mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
 
 outputArtifacts:
