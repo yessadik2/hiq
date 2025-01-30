@@ -26,12 +26,13 @@ steps:
       yum -y install oracle-softwarecollection-release-el7
       yum -y install devtoolset-10
       pip install cmake --upgrade
+      yum install gcc 
       gcc --version
       pip install --no-build-isolation git+https://github.com/juncongmoo/itree.git
   - type: Command
     name: "Download the version 10.10.0 of cdxgen globally"
     command: |
-      scl enable devtoolset-10 -- gcc --version
+      scl enable devtoolset-10 --gcc --version
   - type: Command
     name: "Generate SBOM for Python "
     command: |
