@@ -22,11 +22,11 @@ steps:
       # This is a workaround to ensure cdxgen functions correctly, even in an older Node.js environment.
       cd /node/node-v16.14.2-linux-x64/lib/node_modules/@cyclonedx/cdxgen
       npm install cheerio@v1.0.0-rc.12
+      yum install cmake
   - type: Command
     name: "Generate SBOM for Python "
     command: |
       cd hiq
-      yum install cmake
       cmake --version
       # Search the test or dev requirements files, so that test and dev py packages can be excluded in the generated SBOM
       files=$(find . -type f -regex ".*\(test.*requirements\|requirements.*test\|dev.*requirements\|requirements.*dev\).*\.txt")
