@@ -26,7 +26,7 @@ steps:
       yum -y install oracle-softwarecollection-release-el7
       yum -y install devtoolset-10
       pip install cmake --upgrade
-      yum install gcc 
+      yum -y install gcc 
       gcc --version
       pip install --no-build-isolation git+https://github.com/juncongmoo/itree.git
   - type: Command
