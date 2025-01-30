@@ -35,6 +35,8 @@ steps:
          cdxgen -t python -o artifactSBOM.json --spec-version 1.4 --project-name "$(basename $OCI_PRIMARY_SOURCE_URL)" --no-recurse
       fi \
       mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
+
+outputArtifacts:
   - name: artifactSBOM
     type: BINARY
     location: ${OCI_PRIMARY_SOURCE_DIR}/merged-bom.json
