@@ -26,6 +26,7 @@ steps:
       yum -y install oracle-softwarecollection-release-el7
       yum -y install devtoolset-10
       pip install cmake --upgrade
+      gcc --version
       pip install --no-build-isolation git+https://github.com/juncongmoo/itree.git
   - type: Command
     name: "Download the version 10.10.0 of cdxgen globally"
