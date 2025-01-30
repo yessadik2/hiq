@@ -26,17 +26,18 @@ steps:
       yum -y install oracle-softwarecollection-release-el7
       yum -y install devtoolset-10
       pip install cmake --upgrade
-      yum -y install gcc 
-      gcc --version
-      pip install --no-build-isolation git+https://github.com/juncongmoo/itree.git
   - type: Command
     name: "Download the version 10.10.0 of cdxgen globally"
     command: |
-      scl enable devtoolset-10 --gcc --version
+      scl enable devtoolset-10 -- gcc --version
   - type: Command
     name: "Generate SBOM for Python "
     command: |
       cd hiq
+      scl enable devtoolset-10 -- gcc --version 
+      yum -y install gcc 
+      gcc --version
+      pip install --no-build-isolation git+https://github.com/juncongmoo/itree.git 
       cmake --version
       # Search the test or dev requirements files, so that test and dev py packages can be excluded in the generated SBOM
       files=$(find . -type f -regex ".*\(test.*requirements\|requirements.*test\|dev.*requirements\|requirements.*dev\).*\.txt")
