@@ -4,48 +4,34 @@ version: 0.1
 component: build
 timeoutInSeconds: 1000
 shell: bash
-env:
-  variables:
-    PYTHON_CMD: "python3"
-    CDXGEN_DEBUG_MODE: "debug"
 
 steps:
   - type: Command
-    name: "Download the version 10.10.0 of cdxgen globally"
+    name: "Install cyclonedx_py module"
     command: |
-      npm install -g @cyclonedx/cdxgen@10.10.0
-      gcc --version
-
+      pip install cyclonedx-bom==3.11.7
   - type: Command
-    name: "Workaround to let cdxgen run on nodejs 16"
+    name: "Run Python cyclonedx_py module"
     command: |
-      # cdxgen relies on a fourth-party dependency that cannot be executed in a Node.js environment running version 16
-      # (as installed on the build runner instance)
-      # This is a workaround to ensure cdxgen functions correctly, even in an older Node.js environment.
-      cd /node/node-v16.14.2-linux-x64/lib/node_modules/@cyclonedx/cdxgen
-      npm install cheerio@v1.0.0-rc.12
-      yum -y install oracle-softwarecollection-release-el7
-      yum -y install devtoolset-10
-      yum -y install rh-python38
-      source /opt/rh/devtoolset-10/enable
-      source /opt/rh/rh-python38/enable
-      python3 -m ensurepip --upgrade
-      python3 -m pip install cmake --upgrade
-
+      python3 -m cyclonedx_py -r -i hiq/requirements-fastapi.txt -pb --format json -o fastapi-bom.json
+      python3 -m cyclonedx_py -r -i hiq/requirements-gpu.txt -pb --format json -o gpu-bom.json
+      python3 -m cyclonedx_py -r -i hiq/requirements-int.txt -pb --format json -o int-bom.json
+      python3 -m cyclonedx_py -r -i hiq/requirements-lavis.txt -pb --format json -o lavis-bom.json
+      python3 -m cyclonedx_py -r -i hiq/requirements-nodeps.txt -pb --format json -o nodeps-bom.json
+      python3 -m cyclonedx_py -r -i hiq/requirements-transformers.txt -pb --format json -o transformers-bom.json
+      python3 -m cyclonedx_py -r -i hiq/requirements.txt -pb --format json -o default-bom.json
   - type: Command
-    name: "Generate SBOM for Python"
+    name: "Download CycloneDx-cli executable and install dependencies"
     command: |
-      source /opt/rh/devtoolset-10/enable
-      source /opt/rh/rh-python38/enable
-      python3 -v
-      pip --version 
-      PYTHON_INCLUDE_DIR=$(python3 -c "import sysconfig; print(sysconfig.get_path('include'))")
-      PYTHON_LIBRARY=$(python3 -c "import sysconfig; print(sysconfig.get_config_var('LIBDIR'))") 
-      cd hiq
-      cdxgen -t python3 -o artifactSBOM.json --spec-version 1.4 --project-name "hiq" --no-recurse
-      mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
-
+      wget https://github.com/CycloneDX/cyclonedx-cli/releases/download/v0.24.2/cyclonedx-linux-x64
+      yum install -y libicu
+  - type: Command
+    name: "Merge multiple SBOMs using CycloneDX-cli"
+    command: |
+      # For more details, visit https://github.com/CycloneDX/cyclonedx-cli/blob/main/README.md
+      chmod +x cyclonedx-linux-x64
+      ./cyclonedx-linux-x64 merge --input-files fastapi-bom.json gpu-bom.json int-bom.json lavis-bom.json nodeps-bom.json transformers-bom.json default-bom.json --output-file merged-bom.json
 outputArtifacts:
   - name: artifactSBOM
     type: BINARY
-    location: ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
+    location: ${OCI_PRIMARY_SOURCE_DIR}/merged-bom.json
