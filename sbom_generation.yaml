@@ -6,7 +6,7 @@ timeoutInSeconds: 1000
 shell: bash
 env:
   variables:
-    PYTHON_CMD: "python3.8"
+    PYTHON_CMD: "python3"
     CDXGEN_DEBUG_MODE: "debug"
 
 steps:
@@ -34,7 +34,8 @@ steps:
     command: |
       source /opt/rh/devtoolset-10/enable
       source /opt/rh/rh-python38/enable
-      pip install --upgrade pip
+      python -v
+      python -m pip install --upgrade pip
       cd hiq
       cdxgen -t python -o artifactSBOM.json --spec-version 1.4 --project-name "hiq" --no-recurse
       mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
