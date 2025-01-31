@@ -28,6 +28,9 @@ steps:
       yum -y install devtoolset-10
       yum -y install rh-python38
       pip install cmake --upgrade
+      curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+      python get-pip.py --force-reinstall
+#pip install --upgrade pip
 
   - type: Command
     name: "Generate SBOM for Python "
@@ -35,7 +38,7 @@ steps:
       source /opt/rh/devtoolset-10/enable
       source /opt/rh/rh-python38/enable
       python -v
-      python -m pip install --upgrade pip
+      pip -v 
       cd hiq
       cdxgen -t python -o artifactSBOM.json --spec-version 1.4 --project-name "hiq" --no-recurse
       mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
