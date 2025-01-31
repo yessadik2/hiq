@@ -27,9 +27,9 @@ steps:
       yum -y install oracle-softwarecollection-release-el7
       yum -y install devtoolset-10
       yum -y install rh-python38
-      pip install cmake --upgrade
       curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
       python3 get-pip.py --force-reinstall
+      python3 -m ensurepip --upgrade
 #pip install --upgrade pip
 
   - type: Command
@@ -40,7 +40,8 @@ steps:
       python3 -v
       pip --version 
       cd hiq
-      cdxgen -t python38 -o artifactSBOM.json --spec-version 1.4 --project-name "hiq" --no-recurse
+      python3 -m pip install cmake --upgrade 
+      cdxgen -t python3 -o artifactSBOM.json --spec-version 1.4 --project-name "hiq" --no-recurse
       mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
 
 outputArtifacts:
