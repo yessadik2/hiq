@@ -31,6 +31,7 @@ steps:
       source /opt/rh/rh-python38/enable
       python3 -m ensurepip --upgrade
       python3 -m pip install cmake --upgrade
+      yum -y install python3-dev
 
   - type: Command
     name: "Generate SBOM for Python"
@@ -39,6 +40,8 @@ steps:
       source /opt/rh/rh-python38/enable
       python3 -v
       pip --version 
+      PYTHON_INCLUDE_DIR=$(python -c "import sysconfig; print(sysconfig.get_path('include'))")
+      PYTHON_LIBRARY=$(python -c "import sysconfig; print(sysconfig.get_config_var('LIBDIR'))") 
       cd hiq
       cdxgen -t python3 -o artifactSBOM.json --spec-version 1.4 --project-name "hiq" --no-recurse
       mv artifactSBOM.json ${OCI_PRIMARY_SOURCE_DIR}/artifactSBOM.json
